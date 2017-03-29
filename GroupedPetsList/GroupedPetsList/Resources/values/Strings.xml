@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="network_message">Please check your internet connectivity.</string>
+  <string name="NoData_message">Data is not available.</string>
+</resources>
