@@ -11,6 +11,8 @@
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Base\ControllerBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Constants\Constants.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Exception Handler\CustomException.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Exception Handler\ExceptionHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Model\PetsOwner.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\PetsServiceHandler.cs" />
   </ItemGroup>

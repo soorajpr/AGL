@@ -31,13 +31,16 @@ namespace GroupedPetsList.Shared
             }
             catch (Exception ex)
             {
-
+                var exception = new CustomException(ex);
+                exception.RequestUrl = Constants.PetsUrl;
+                exception.MethodName = "GetPetListAsync";
+                ExceptionHandler.Instance.LogError(exception);
             }
 
             return data;
         }
 
-        public List<PetsOwner> GetGroupedPetsList(List<PetsOwner> petsOwnerList)
+        private List<PetsOwner> GetGroupedPetsList(List<PetsOwner> petsOwnerList)
         {
             if (null != petsOwnerList)
             {
@@ -55,7 +58,9 @@ namespace GroupedPetsList.Shared
                 }
                 catch(Exception ex)
                 {
-
+                    var exception = new CustomException(ex);
+                    exception.MethodName = "GetGroupedPetsList";
+                    ExceptionHandler.Instance.LogError(exception);
                 }
             }
             return null;
