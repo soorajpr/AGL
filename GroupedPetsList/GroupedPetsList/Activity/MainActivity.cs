@@ -6,6 +6,7 @@ using System.Linq;
 using Android.Net;
 using Android.Views;
 using GroupedPetsList.Shared;
+using System;
 
 namespace GroupedPetsList
 {
@@ -46,9 +47,18 @@ namespace GroupedPetsList
         /// </summary>
         void InitializeView()
         {
-            expandableList = FindViewById<ExpandableListView>(Resource.Id.groupedListView);
-            progressBar = FindViewById<ProgressBar>(Resource.Id.progressBar);
-            txtNodataText= FindViewById<TextView>(Resource.Id.txtNodata);
+            try
+            {
+                expandableList = FindViewById<ExpandableListView>(Resource.Id.groupedListView);
+                progressBar = FindViewById<ProgressBar>(Resource.Id.progressBar);
+                txtNodataText = FindViewById<TextView>(Resource.Id.txtNodata);
+            }
+            catch (Exception ex)
+            {
+                var exception = new CustomException(ex);
+                exception.MethodName = "InitializeView";
+                ExceptionHandler.Instance.LogError(exception);
+            }
         }
 
 
@@ -57,26 +67,39 @@ namespace GroupedPetsList
 		/// </summary>
 		async void FetchPetsCollection()
         {
-            progressBar.Visibility = ViewStates.Visible;
-
-            if (IsNetworkAvilable())
+            try
             {
-                petsOwnerList = await PetsServiceHandler.Instance.GetPetListAsync();
-                if (null != petsOwnerList)
-                    InitializeAdapter(petsOwnerList);
+                progressBar.Visibility = ViewStates.Visible;
+
+                if (IsNetworkAvilable())
+                {
+                    petsOwnerList = await PetsServiceHandler.Instance.GetPetsOwnerListAsync();
+                    if (null != petsOwnerList)
+                        InitializeAdapter(petsOwnerList);
+                    else
+                    {
+                        txtNodataText.Text = GetString(Resource.String.NoData_message);
+                        txtNodataText.Visibility = ViewStates.Visible;
+                    }
+                }
                 else
                 {
-                    txtNodataText.Text = GetString(Resource.String.NoData_message);
+                    txtNodataText.Text = GetString(Resource.String.network_message);
                     txtNodataText.Visibility = ViewStates.Visible;
                 }
+
+                progressBar.Visibility = ViewStates.Gone;
             }
-            else
+            catch (Exception ex)
             {
-                txtNodataText.Text = GetString(Resource.String.network_message);
+                txtNodataText.Text = GetString(Resource.String.NoData_message);
                 txtNodataText.Visibility = ViewStates.Visible;
+                progressBar.Visibility = ViewStates.Gone;
+                var exception = new CustomException(ex);
+                exception.MethodName = "FetchPetsCollection";
+                ExceptionHandler.Instance.LogError(exception);
             }
 
-            progressBar.Visibility = ViewStates.Gone;
         }
 
         /// <summary>
@@ -84,8 +107,17 @@ namespace GroupedPetsList
 		/// </summary>
 		void InitializeAdapter(List<PetsOwner> petsList)
         {
-            var petsListAdapter = new ExpandableListViewAdapter(this, petsList);
-            expandableList.SetAdapter(petsListAdapter);
+            try
+            {
+                var petsListAdapter = new ExpandableListViewAdapter(this, petsList);
+                expandableList.SetAdapter(petsListAdapter);
+            }
+            catch (Exception ex)
+            {
+                var exception = new CustomException(ex);
+                exception.MethodName = "InitializeAdapter";
+                ExceptionHandler.Instance.LogError(exception);
+            }
         }
 
 
@@ -95,12 +127,22 @@ namespace GroupedPetsList
 		/// <returns><c>true</c> if this instance is network avilable the specified context; otherwise, <c>false</c>.</returns>
 		public bool IsNetworkAvilable()
         {
-            var context = Application.Context;
-            var connectivity = (ConnectivityManager)context.GetSystemService(ConnectivityService);
-            if (null == connectivity)
-                return false;
-            var info = connectivity.GetAllNetworkInfo();
-            return null != info && info.Any(t => t.GetState() == NetworkInfo.State.Connected);
+            try
+            {
+                var context = Application.Context;
+                var connectivity = (ConnectivityManager)context.GetSystemService(ConnectivityService);
+                if (null == connectivity)
+                    return false;
+                var info = connectivity.GetAllNetworkInfo();
+                return null != info && info.Any(t => t.GetState() == NetworkInfo.State.Connected);
+            }
+            catch(Exception ex)
+            {
+                var exception = new CustomException(ex);
+                exception.MethodName = "IsNetworkAvilable";
+                ExceptionHandler.Instance.LogError(exception);
+            }
+            return false;
         }
 
         #endregion

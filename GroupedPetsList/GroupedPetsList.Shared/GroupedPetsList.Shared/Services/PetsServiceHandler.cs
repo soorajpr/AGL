@@ -8,7 +8,7 @@ namespace GroupedPetsList.Shared
 {
     public class PetsServiceHandler : ControllerBase<PetsServiceHandler>
     {
-        public async Task<List<PetsOwner>> GetPetListAsync()
+        public async Task<List<PetsOwner>> GetPetsOwnerListAsync()
         {
             List<PetsOwner> data = null;
 
@@ -40,7 +40,7 @@ namespace GroupedPetsList.Shared
             return data;
         }
 
-        private List<PetsOwner> GetGroupedPetsList(List<PetsOwner> petsOwnerList)
+        public List<PetsOwner> GetGroupedPetsList(List<PetsOwner> petsOwnerList)
         {
             if (null != petsOwnerList)
             {
