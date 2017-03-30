@@ -41,15 +41,22 @@ namespace GroupedPetsList.Shared
         {
             if (null != petsOwnerList)
             {
-                var sortedPetsList = petsOwnerList.Where(t => t.Pets != null).GroupBy(t => t.Gender)
-                          .Select(t => new PetsOwner
-                          {
-                              Gender = t.Key,
-                              Pets = t.SelectMany(k => k.Pets).Where(m => m.PetType.ToLower() == "cat").
-                                      OrderBy(k => k.PetName).ToList()
-                          }).ToList();
+                try
+                {
+                    var sortedPetsList = petsOwnerList.Where(t => t.Pets != null).GroupBy(t => t.Gender)
+                              .Select(t => new PetsOwner
+                              {
+                                  Gender = t.Key,
+                                  Pets = t.SelectMany(k => k.Pets).Where(m => m.PetType.ToLower() == "cat").
+                                          OrderBy(k => k.PetName).ToList()
+                              }).ToList();
 
-                return sortedPetsList;
+                    return sortedPetsList;
+                }
+                catch(Exception ex)
+                {
+
+                }
             }
             return null;
         }
